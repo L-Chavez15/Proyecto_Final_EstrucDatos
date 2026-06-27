@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Clases
 {
-    public class Class1
+    public class Vertice
     {
+        public Lugar dato;
+
+        public Vertice sig=null;
     }
 }
