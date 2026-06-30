@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="Clases/Clases.csproj" />
-  <Project Path="Ejecucion/Ejecucion.csproj" />
+  <Project Path="Clases/Clases.csproj" Id="bcfee59d-83b9-4a4e-ba45-71da099857e0" />
+  <Project Path="Ejecucion/Ejecucion.csproj" Id="893d534f-cb8d-4c49-9d40-72b516573679" />
 </Solution>
