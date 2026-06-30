@@ -52,8 +52,55 @@ namespace Clases
                 Console.WriteLine();
             }
         }
+        public void CrearGrafo()
+        {
+            Random r = new Random();
+            Vertice temp_i = l_vertices.primero;
+            for (int i = 0; i < ma.GetLength(0); i++)
+            {
+                Vertice temp_j = l_vertices.primero;
+                for (int j = 0; j < ma.GetLength(1); j++)
+                {
+                    //i,j
+                    //temp_i,temp_j
+                    if (ma[i, j] == 1)
+                    {
+                        //unir temp_i con el temp_j
+                        temp_i.ls.Insertar(temp_j, r.Next(100, 500));
+                    }
+                    temp_j = temp_j.sig;
+                }
+                temp_i = temp_i.sig;
+            }
+        }
 
-       
+        public void Recorrer(Vertice v, ref float total)
+        {
+            Console.ReadKey();
+            Console.Clear();
+            Console.WriteLine("--------------------------------");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Ciudad actual: \n" + v.dato + "\n");
+            Console.ResetColor();
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("Viajes disponibles: ");
+            v.ls.Mostrar();
+            Console.WriteLine("--------------------------------");
+            Console.Write("Ingrese el numero de la ciudad a la que desea viajar: ");
+            int op = int.Parse(Console.ReadLine());
+
+            if (op == 0) return;
+
+            Arista temp = v.ls.primero;
+            for (int i = 1; i < op; i++)
+            {
+                temp = temp.sig;
+            }
+            total = total + temp.peso;
+            //con la arista por la que tengo que recorrer
+            Recorrer(temp.destino, ref total);
+        }
+
     }
 
 }
