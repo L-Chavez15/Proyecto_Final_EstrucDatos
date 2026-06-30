@@ -26,7 +26,34 @@ namespace Clases
             }
             ma = new int[cant, cant];
         }
-        
+        public Vertice GetInicio()
+        {
+            return l_vertices.primero;
+        }
+        public void GenerarMatriz()
+        {
+            Random r = new Random();
+            for (int i = 0; i < ma.GetLength(0); i++)
+            {
+                for (int j = 0; j < ma.GetLength(1); j++)
+                {
+                    ma[i, j] = r.Next(0, 2);
+                }
+            }
+        }
+        public void MostrarMatriz()
+        {
+            for (int i = 0; i < ma.GetLength(0); i++)
+            {
+                for (int j = 0; j < ma.GetLength(1); j++)
+                {
+                    Console.Write(ma[i, j] + "\t");
+                }
+                Console.WriteLine();
+            }
+        }
+
+       
     }
 
 }
