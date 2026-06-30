@@ -9,7 +9,7 @@ namespace Clases
     public class Vertice
     {
         public Lugar dato;
-
         public Vertice sig=null;
+
     }
 }

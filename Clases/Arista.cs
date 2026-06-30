@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Clases
 {
-    public class Grafo
+    public class Arista
     {
     }
 }

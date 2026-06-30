@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arista.cs" />
     <Compile Include="Grafo.cs" />
     <Compile Include="Lugar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
