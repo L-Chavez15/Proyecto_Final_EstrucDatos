@@ -8,5 +8,7 @@ namespace Clases
 {
     public class Grafo
     {
+        ListaSimple l_vertices=new ListaSimple();
+        int[,] ma;
     }
 }

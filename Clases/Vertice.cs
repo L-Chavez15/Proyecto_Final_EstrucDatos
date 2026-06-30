@@ -11,5 +11,6 @@ namespace Clases
         public Lugar dato;
         public Vertice sig=null;
 
+
     }
 }
