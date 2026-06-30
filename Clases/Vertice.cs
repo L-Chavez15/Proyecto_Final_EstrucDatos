@@ -11,6 +11,6 @@ namespace Clases
         public Lugar dato;
         public Vertice sig=null;
 
-
+        public ListaAristas ls = new ListaAristas();
     }
 }
