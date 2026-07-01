@@ -9,6 +9,7 @@ namespace Ejecucion
 {
     internal class Program
     {
+        //rama Version2_de_Juego_ProbarDISJHTRA
         static void Main(string[] args)
         {
             int cantidadNodos = 10;
