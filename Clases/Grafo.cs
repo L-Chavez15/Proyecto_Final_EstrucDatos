@@ -87,7 +87,7 @@ namespace Clases
             Console.Clear();
             Console.WriteLine("==================================================");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("📍 UBICACIÓN ACTUAL: " + v.dato.nombre);
+            Console.WriteLine("* UBICACIÓN ACTUAL: " + v.dato.nombre);
             Console.ResetColor();
             Console.WriteLine("   Estamina gastada: " + total + " Pts.");
             Console.WriteLine("==================================================\n");
@@ -96,7 +96,7 @@ namespace Clases
             if (v.ls.primero == null)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("🏆 ¡HAS LLEGADO A LA CUMBRE!");
+                Console.WriteLine("* ¡HAS LLEGADO A LA CUMBRE!");
                 Console.ResetColor();
                 return;
             }
@@ -104,7 +104,7 @@ namespace Clases
             Console.WriteLine("Saltos disponibles:");
             v.ls.Mostrar(); // Muestra las opciones
             Console.WriteLine("--------------------------------");
-            Console.Write("🎮 Ingresa el número del camino que deseas tomar: ");
+            Console.Write("* Ingresa el número del camino que deseas tomar: ");
 
             int op = int.Parse(Console.ReadLine());
 
@@ -123,8 +123,14 @@ namespace Clases
                 JugarManual(temp.destino, ref total, ref ruta);
             }
         }
-
-        // 🤖 EL SISTEMA CALCULA EL CAMINO ÓPTIMO (Para la rúbrica del examen)
+        private int BuscarIndice(Vertice v, Vertice[] nodos)
+        {
+            for (int i = 0; i < nodos.Length; i++)
+            {
+                if (nodos[i] == v) return i;
+            }
+            return -1;
+        }
         public void CalcularRutaOptima(Vertice v, ref float total, ref string ruta)
         {
             if (v == null) return;
