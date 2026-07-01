@@ -8,26 +8,18 @@ namespace Clases
 {
     public class Pila
     {
-        public Nodo cima = null;
+        public Vertice cima = null;
 
         //apilar(PUSH)
         public void Apilar(string nombreLugar)
         {
             //1. crear nodo
-            Nodo nuevo = new Nodo();
-            nuevo.dato = nombreLugar;
-            /*reducir código
-            nuevo.siguiente = cima;
-            cima = nuevo;*/
-            if (cima == null)
-            {
-                cima = nuevo;
-            }
-            else
-            {
-                nuevo.siguiente = cima;
-                cima = nuevo;
-            }
+            Vertice nuevo = new Vertice();
+            nuevo.dato2 = nombreLugar;
+            
+            nuevo.sig = cima;
+            cima = nuevo;
+            
         }
 
         //Desapilar
@@ -36,8 +28,8 @@ namespace Clases
             string dato = null;
             if (cima != null)
             {
-                dato = cima.dato;
-                cima = cima.siguiente;
+                dato = cima.dato2;
+                cima = cima.sig;
             }
             return dato;
         }

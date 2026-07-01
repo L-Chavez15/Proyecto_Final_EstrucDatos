@@ -11,7 +11,7 @@ namespace Ejecucion
     {
         static void Main(string[] args)
         {
-            int cantidadNodos = 5;
+            int cantidadNodos = 10;
             Grafo montaña = new Grafo(cantidadNodos);
 
             montaña.GenerarMatriz();
@@ -23,40 +23,98 @@ namespace Ejecucion
             float estaminaJugador = 0;
             string rutaJugador = "";
 
-            // Variables del Sistema (Óptimo)
+            // Variables del Sistema (Dijkstra)
             float estaminaOptima = 0;
             string rutaOptima = "";
 
-            Console.WriteLine("==================================================");
-            Console.WriteLine("   BIENVENIDO AL SIMULADOR DE ESCALADA CELESTE");
-            Console.WriteLine("==================================================");
-            Console.WriteLine("Presiona ENTER para empezar a jugar...");
-            Console.ReadLine();
+            MostrarBienvenida();
 
             montaña.JugarManual(inicio, ref estaminaJugador, ref rutaJugador);
 
-            montaña.CalcularRutaOptima(inicio, ref estaminaOptima, ref rutaOptima);
+            // El sistema calcula el camino REALMENTE más óptimo con Dijkstra
+            montaña.CalcularRutaOptima(inicio, out estaminaOptima, out rutaOptima);
 
-            Console.WriteLine("\n================ RESULTADOS  ================");
-            Console.WriteLine("TU PARTIDA:");
-            Console.WriteLine("> Camino que tomaste: " + rutaJugador.Substring(4));
-            Console.WriteLine("> Estamina total consumida: " + estaminaJugador);
-            Console.WriteLine("\nRECOMENDACIÓN DEL SISTEMA :");
-            Console.WriteLine("> El camino más óptimo era: " + rutaOptima.Substring(4));
-            Console.WriteLine("> Estamina mínima posible: " + estaminaOptima);
-            Console.WriteLine("===========================================================");
+            MostrarResultados(rutaJugador, estaminaJugador, rutaOptima, estaminaOptima);
+
+            Console.ResetColor();
+            Console.WriteLine("\nPresione cualquier tecla para finalizar...");
+            Console.ReadKey();
+            Console.ResetColor();
+        }
+
+        static void MostrarBienvenida()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("==================================================");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("        🏔️  SIMULADOR DE ESCALADA CELESTE  🏔️");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("==================================================");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("  Elige tu camino con cuidado: cada salto consume");
+            Console.WriteLine("  estamina. Al final, el sistema te dirá si tomaste");
+            Console.WriteLine("  la ruta más óptima usando el algoritmo de Dijkstra.");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("==================================================");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("\n▶ Presiona ENTER para empezar a escalar...");
+            Console.ResetColor();
+            Console.ReadLine();
+        }
+
+        static void MostrarResultados(string rutaJugador, float estaminaJugador, string rutaOptima, float estaminaOptima)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("==================================================");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("                  📊 RESULTADOS  📊");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("==================================================\n");
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("🧗 TU PARTIDA:");
+            Console.ResetColor();
+            Console.WriteLine("   Camino que tomaste:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("   " + rutaJugador.Substring(4));
+            Console.ResetColor();
+            Console.Write("   Estamina total consumida: ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(estaminaJugador + " Pts.");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("\n--------------------------------------------------\n");
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("🤖 RECOMENDACIÓN DEL SISTEMA (Dijkstra):");
+            Console.ResetColor();
+            Console.WriteLine("   El camino más óptimo era:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("   " + rutaOptima.Substring(4));
+            Console.ResetColor();
+            Console.Write("   Estamina mínima posible: ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(estaminaOptima + " Pts.");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("\n==================================================");
+            Console.ResetColor();
 
             if (estaminaJugador <= estaminaOptima)
             {
-                Console.WriteLine("\n¡Felicidades! Encontraste la ruta perfecta.");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n🏆 ¡Felicidades! Encontraste la ruta perfecta.");
             }
             else
             {
-                Console.WriteLine("\nSobreviviste, pero el sistema encontró una ruta mejor.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n⚠️  Sobreviviste, pero el sistema encontró una ruta mejor.");
             }
-
-            Console.WriteLine("\nPresione cualquier tecla para finalizar...");
-            Console.ReadKey();
+            Console.ResetColor();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Clases
     public class Vertice
     {
         public Lugar dato;
-        public 
+        public string dato2;
         public Vertice sig=null;
 
         public ListaAristas ls = new ListaAristas();
