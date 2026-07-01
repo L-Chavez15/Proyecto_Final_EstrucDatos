@@ -35,7 +35,7 @@ namespace Clases
             int i = 1;
             while (temp != null)
             {
-                Console.WriteLine(i + ". " + temp.destino.dato + " - Peso: " + temp.peso);
+                Console.WriteLine(i + ". " + temp.destino.dato.nombre + " - Gasta estamina: " + temp.peso);
                 temp = temp.sig;
                 i++;
             }

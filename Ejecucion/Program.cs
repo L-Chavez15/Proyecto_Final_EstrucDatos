@@ -11,39 +11,52 @@ namespace Ejecucion
     {
         static void Main(string[] args)
         {
-            //Grafo gf=new Grafo(5); // Por ejemplo, 5 ciudades
-            int op = 0;
+            int cantidadNodos = 5;
+            Grafo montaña = new Grafo(cantidadNodos);
 
-            do
+            montaña.GenerarMatriz();
+            montaña.CrearGrafo();
+
+            Vertice inicio = montaña.GetInicio();
+
+            // Variables del Jugador
+            float estaminaJugador = 0;
+            string rutaJugador = "";
+
+            // Variables del Sistema (Óptimo)
+            float estaminaOptima = 0;
+            string rutaOptima = "";
+
+            Console.WriteLine("==================================================");
+            Console.WriteLine("   BIENVENIDO AL SIMULADOR DE ESCALADA CELESTE");
+            Console.WriteLine("==================================================");
+            Console.WriteLine("Presiona ENTER para empezar a jugar...");
+            Console.ReadLine();
+
+            montaña.JugarManual(inicio, ref estaminaJugador, ref rutaJugador);
+
+            montaña.CalcularRutaOptima(inicio, ref estaminaOptima, ref rutaOptima);
+
+            Console.WriteLine("\n================ RESULTADOS  ================");
+            Console.WriteLine("TU PARTIDA:");
+            Console.WriteLine("> Camino que tomaste: " + rutaJugador.Substring(4));
+            Console.WriteLine("> Estamina total consumida: " + estaminaJugador);
+            Console.WriteLine("\nRECOMENDACIÓN DEL SISTEMA :");
+            Console.WriteLine("> El camino más óptimo era: " + rutaOptima.Substring(4));
+            Console.WriteLine("> Estamina mínima posible: " + estaminaOptima);
+            Console.WriteLine("===========================================================");
+
+            if (estaminaJugador <= estaminaOptima)
             {
-                Console.Clear();
-                Console.WriteLine("\t\t========HABITTRACK========");
-                Console.WriteLine("1. Ingrese cantidad de lugares: ");
-                Console.WriteLine("2. Generar matriz de adyacencia");
-                Console.WriteLine("3. Calcular ruta más corta");
-                Console.WriteLine("0. Salir");
-                Console.Write("INGRESE UNA OPCIÓN: ");
-                op = int.Parse(Console.ReadLine());
-                switch (op)
-                {
-                    case 1:
-                        Console.Write("Ingrese la cantidad de lugares: ");
-                        int cant = int.Parse(Console.ReadLine());
-                        Grafo gf = new Grafo(cant);
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
+                Console.WriteLine("\n¡Felicidades! Encontraste la ruta perfecta.");
+            }
+            else
+            {
+                Console.WriteLine("\nSobreviviste, pero el sistema encontró una ruta mejor.");
+            }
 
-                    default:
-                        Console.WriteLine("Ingrese una opción válida.");
-                        break;
-                }
-                Console.ReadKey();  
-            } while (op!=0);
-
-
+            Console.WriteLine("\nPresione cualquier tecla para finalizar...");
+            Console.ReadKey();
         }
     }
 }

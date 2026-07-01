@@ -2,12 +2,14 @@
 {
     public class Lugar
     {
+        // punto de control
         public string nombre;
-        public string descripcion;
+        public string clima;
+        public int temperatura;
 
         public override string ToString()
         {
-            return $"{nombre} -> {descripcion}";
+            return $"{nombre} - CLIMA: {clima}, TEMPERATURA: {temperatura}";
         }
     }
 }
