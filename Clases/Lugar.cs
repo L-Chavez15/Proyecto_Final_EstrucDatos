@@ -3,11 +3,12 @@
     public class Lugar
     {
         public string nombre;
-        public string descripcion;
+        public string clima;
+        public float temperatura;
 
         public override string ToString()
         {
-            return $"{nombre} -> {descripcion}";
+            return $"{nombre} (Clima: {clima} - {temperatura} C°)";
         }
     }
 }

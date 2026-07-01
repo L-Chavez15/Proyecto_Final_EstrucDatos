@@ -8,13 +8,14 @@ namespace Clases
 {
     public class ListaAristas
     {
-        public Arista primero=null;
+        public Arista primero = null;
 
         public void Insertar(Vertice d, float p)
         {
             Arista nuevo = new Arista();
             nuevo.destino = d;
             nuevo.peso = p;
+
             if (primero == null)
             {
                 primero = nuevo;
@@ -29,13 +30,14 @@ namespace Clases
                 temp.sig = nuevo;
             }
         }
+
         public void Mostrar()
         {
             Arista temp = primero;
             int i = 1;
             while (temp != null)
             {
-                Console.WriteLine(i + ". " + temp.destino.dato + " - Peso: " + temp.peso);
+                Console.WriteLine(i + ". " + temp.destino.dato.nombre + " - Gasta estamina: " + temp.peso);
                 temp = temp.sig;
                 i++;
             }
