@@ -33,6 +33,10 @@ namespace Clases
             }
             return dato;
         }
+        public bool EstaVacia()
+        {
+            return cima == null;
+        }
 
     }
 }
