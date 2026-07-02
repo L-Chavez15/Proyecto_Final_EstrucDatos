@@ -8,8 +8,8 @@ namespace Clases
 {
     public class ListaSimple
     {
+        //Usamos lista simple para saber cuantos nodos hay en el grafo y poder recorrerlos
         public Vertice primero = null;
-
         public void Insertar(Lugar d)
         {
             Vertice nuevo = new Vertice();
@@ -31,7 +31,6 @@ namespace Clases
         public void Mostrar()
         {
             Vertice temp = primero;
-
             while (temp != null)
             {
                 Console.WriteLine(temp.dato);
