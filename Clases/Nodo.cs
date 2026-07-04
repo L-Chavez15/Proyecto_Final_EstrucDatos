@@ -9,6 +9,7 @@ namespace Clases
     public class Nodo
     {
         public string dato;
+        public Vertice datoCola;
         public Nodo sig = null;
     }
 }

@@ -9,30 +9,46 @@ namespace Clases
     public class Grafo
     {
         ListaSimple l_vertices = new ListaSimple();
-        int[,] ma;
-        int cantidad;
+        int[,] ma;//matriz de adyacencia
+        int cantidad;//cantidad de vertices
 
-        string[] nom_puntos = { "Faldas de la Montaña", "Bosque Susurrante", "Ciudad Olvidada", "Puente Colgante",
+        string[] nom_puntos = {"Faldas de la Montaña", "Bosque Susurrante", "Ciudad Olvidada", "Puente Colgante",
                                  "Resort Celestial", "Cueva de Cristal", "Templo del Espejo", "Glaciar Eterno",
-                                 "Refugio del Águila", "La Cumbre" };
+                                 "Refugio del Águila", "La Cumbre"  };
         string[] climas = { "Tranquilo", "Nublado", "Viento", "Neblina", "Fantasmal", "Húmedo", "Oscuridad", "Helado", "Ventisca", "Helado" };
+
+        // NUEVO: pequeño texto narrativo por cada lugar, sigue el mismo orden que nom_puntos
+        string[] descripciones = {
+            "El sendero comienza suave, entre pastizales y piedras sueltas. Todavía se puede oler el pueblo a lo lejos.",
+            "Los árboles se cierran sobre tu cabeza. El viento se filtra entre las ramas como si murmurara algo que no alcanzas a entender.",
+            "Ruinas cubiertas de musgo asoman entre la niebla. Alguna vez alguien vivió aquí, y ahora solo quedan las piedras.",
+            "Un puente de cuerdas cruje bajo tus pies, colgado sobre un abismo que se pierde en la bruma.",
+            "Un antiguo refugio, alguna vez lujoso, ahora ofrece poco más que paredes rotas y algo de calor para descansar.",
+            "Las paredes de la cueva brillan con cristales que devuelven tu propia luz, multiplicada en mil reflejos.",
+            "Un templo silencioso. Los espejos en sus muros parecen seguir cada uno de tus pasos.",
+            "El hielo cruje bajo tus botas. El frío ya no se siente en la piel, sino en los huesos.",
+            "Un nido de piedra en lo alto, donde las águilas vigilan el valle entero como centinelas eternos.",
+            "La cumbre. El aire es escaso, pero la vista que se abre ante ti hace que cada paso haya valido la pena."
+        };
 
         public Grafo(int cant)
         {
-            cantidad = cant;
+
+            cantidad = cant;// si elminamos esto, el bucle de dijkstra no se ejecutará correctamente
+            //si elminamos cantidad dijkstra no sabrá cuántos vértices hay en el grafo y no podrá recorrerlos correctamente
             Random r = new Random();
-            for (int i = 0; i < cant; i++)
+            for (int i = 0; i < cantidad; i++)
             {
-                Lugar p = new Lugar();
-                p.nombre = nom_puntos[i];
-                p.clima = climas[i];
-                p.temperatura = r.Next(-10, 15);
+                Lugar l = new Lugar();//crea un nuevo lugar por cada nombre
+                l.nombre = nom_puntos[i];
+                l.clima = climas[i];
+                l.temperatura = r.Next(-10, 15);
+                l.descripcion = descripciones[i]; // NUEVO: asignamos la narrativa del lugar
 
-                l_vertices.Insertar(p);
+                l_vertices.Insertar(l);
             }
-            ma = new int[cant, cant];
+            ma = new int[cant, cant];//prepara la matriz
         }
-
         public Vertice GetInicio()
         {
             return l_vertices.primero;
@@ -41,32 +57,42 @@ namespace Clases
         public void GenerarMatriz()
         {
             Random r = new Random();
-            for (int i = 0; i < ma.GetLength(0); i++)
+            for (int i = 0; i < cantidad; i++)
             {
-                for (int j = 0; j < ma.GetLength(1); j++)
+                for (int j = 0; j < cantidad; j++)
                 {
-                    // Evita bucles infinitos: Siempre vamos hacia adelante
-                    if (j == i + 1) ma[i, j] = 1; // siempre existe el "salto obligado" al siguiente
-                    else if (j > i + 1) ma[i, j] = r.Next(0, 10) < 4 ? 1 : 0; // ~40% de probabilidad de atajo/ruta extra
-                    else ma[i, j] = 0;
+                    if (j == i + 1)//conexion con el siguiente nodo
+                                   // garantiza que siempre se pueda llegar a la meta
+                                   //si eliminamos esto, el grafo podría no tener un camino hacia la meta
+                    {
+                        ma[i, j] = 1; // salto obligado al siguiente: garantiza que siempre se pueda llegar a la meta
+                    }
+                    else if (j > i + 1)
+                    {
+                        // ~40% de probabilidad de atajo extra
+                        int numero = r.Next(0, 10);
+                        if (numero < 4)
+                        {
+                            ma[i, j] = 1;
+                        }
+                        else
+                        {
+                            ma[i, j] = 0;
+                        }
+                    }
+                    else
+                    {
+                        ma[i, j] = 0; //  evita ciclos infinitos
+                                      // para ir siempre hasta la cumbre
+                                      //pero revisar la posibilidad de regresar a un nodo anteriora
+
+                    }
                 }
             }
         }
-
-        public void MostrarMatriz()
+        public void CrearGarfo()
         {
-            for (int i = 0; i < ma.GetLength(0); i++)
-            {
-                for (int j = 0; j < ma.GetLength(1); j++)
-                {
-                    Console.Write(ma[i, j] + "\t");
-                }
-                Console.WriteLine();
-            }
-        }
-
-        public void CrearGrafo()
-        {
+            //si eliminamos esto, el grafo no tendrá aristas reales y no se podrá recorrer
             Random r = new Random();
             Vertice temp_i = l_vertices.primero;
             for (int i = 0; i < ma.GetLength(0); i++)
@@ -76,149 +102,173 @@ namespace Clases
                 {
                     if (ma[i, j] == 1)
                     {
+                        //traduce la matriz de adyacencia en aristas, con pesos aleatorios entre 10 y 50
                         temp_i.ls.Insertar(temp_j, r.Next(10, 50));
+                        //si borramos esto, ningún vertice tendría aristas
                     }
                     temp_j = temp_j.sig;
                 }
                 temp_i = temp_i.sig;
             }
         }
-
-        // -------- MODO MANUAL: el jugador elige el camino --------
-        public void JugarManual(Vertice v, ref float total, ref string ruta)
+        public void RecorrerGrafo(Vertice v, ref float total, ref string ruta)
         {
             ruta += " -> " + v.dato.nombre;
 
             Console.Clear();
             Console.WriteLine("==================================================");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("📍 UBICACIÓN ACTUAL: " + v.dato.nombre);
+            Console.WriteLine(" * UBICACIÓN ACTUAL: " + v.dato.nombre);
             Console.ResetColor();
             Console.WriteLine("   Estamina gastada: " + total + " Pts.");
+
+            // NUEVO: narrativa del lugar + clima/temperatura, para dar ambientación
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("   Clima: " + v.dato.clima + "   |   Temperatura: " + v.dato.temperatura + "°C");
+            Console.ResetColor();
+            Console.WriteLine("   " + v.dato.descripcion);
             Console.WriteLine("==================================================\n");
 
-            if (v.ls.primero == null)
+            if (v.ls.primero == null)//significa que llego a la cumbre, ya que no hay más aristas que recorrer
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("🏆 ¡HAS LLEGADO A LA CUMBRE!");
+                Console.WriteLine(" ¡HAS LLEGADO A LA CUMBRE!");
+                Console.WriteLine(" Tras un largo ascenso, el viento helado se calma un instante,");
+                Console.WriteLine(" como si la montaña misma reconociera tu esfuerzo.");
                 Console.ResetColor();
                 return;
             }
 
             Console.WriteLine("Saltos disponibles:");
             v.ls.Mostrar();
-            Console.WriteLine("--------------------------------");
-            Console.Write("🎮 Ingresa el número del camino que deseas tomar: ");
+            Console.WriteLine("-----------------------------------------------------");
 
-            int op = int.Parse(Console.ReadLine());
-            if (op == 0) return;
+            // NUEVO: validación de la entrada para evitar que un dato inválido rompa el juego
+            int op = -1;
+            bool entradaValida = false;
+            while (!entradaValida)
+            {
+                Console.Write("* Ingresa el número del camino que deseas tomar (0 para detenerte): ");
+                string entrada = Console.ReadLine();
+
+                if (int.TryParse(entrada, out op))
+                {
+                    int cantidadOpciones = 0;
+                    Arista contador = v.ls.primero;
+                    while (contador != null)
+                    {
+                        cantidadOpciones++;
+                        contador = contador.sig;
+                    }
+
+                    if (op == 0 || (op >= 1 && op <= cantidadOpciones))
+                    {
+                        entradaValida = true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("   Ese camino no existe. Intenta de nuevo.");
+                        Console.ResetColor();
+                    }
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("   Ingresa solo un número.");
+                    Console.ResetColor();
+                }
+            }
+
+            if (op == 0)
+            {
+                return;
+            }
 
             Arista temp = v.ls.primero;
             for (int i = 1; i < op; i++)
             {
-                if (temp != null) temp = temp.sig;
+                if (temp != null)
+                {
+                    temp = temp.sig;
+                }
             }
 
             if (temp != null)
             {
                 total = total + temp.peso;
-                JugarManual(temp.destino, ref total, ref ruta);
+                RecorrerGrafo(temp.destino, ref total, ref ruta);
             }
         }
 
-        // -------- BUSCAR EL INDICE DE UN VERTICE DENTRO DEL ARREGLO AUXILIAR --------
-        private int BuscarIndice(Vertice v, Vertice[] nodos)
+        //metodo de dijkstra para encontrar la ruta más corta
+        public void CalcularRutaOptima(Vertice inicio, ref float total, ref string ruta)
         {
-            for (int i = 0; i < nodos.Length; i++)
-            {
-                if (nodos[i] == v) return i;
-            }
-            return -1;
-        }
-
-        // -------- DIJKSTRA: EL SISTEMA CALCULA EL CAMINO REALMENTE MÁS ÓPTIMO --------
-        // No usa ArrayList/List<T>/PriorityQueue: solo arreglos simples, del mismo
-        // tamaño que la matriz de adyacencia (ma), tal como ya hace el resto del proyecto.
-        public void CalcularRutaOptima(Vertice inicio, out float total, out string ruta)
-        {
-            // 1) Pasamos la lista enlazada de vertices a un arreglo, para poder
-            //    indexarlos igual que en la matriz "ma" (mismo orden de creación)
-            Vertice[] nodos = new Vertice[cantidad];
+            //1. Preparación del terreno (Inicialización)
             Vertice temp = l_vertices.primero;
-            int idx = 0;
-            while (temp != null)
+            while (temp != null)//recorremos los vertices
             {
-                nodos[idx] = temp;
-                idx++;
+                temp.distancia = float.MaxValue;//max.value = infinito (3.4x10^38)
+                temp.visitado = false;
+                temp.anterior = null;
                 temp = temp.sig;
             }
+            inicio.distancia = 0;
 
-            float[] distancia = new float[cantidad]; // costo acumulado mínimo hasta cada nodo
-            bool[] visitado = new bool[cantidad];
-            int[] anterior = new int[cantidad];       // para reconstruir el camino
-
-            for (int i = 0; i < cantidad; i++)
+            //2. Buscar el paso más corto
+            //ver si se puede usar COLA
+            for (int i = 0; i < cantidad; i++)//se repite tantas veces como vértices haya
             {
-                distancia[i] = float.MaxValue;
-                visitado[i] = false;
-                anterior[i] = -1;
-            }
-
-            int origen = BuscarIndice(inicio, nodos);
-            distancia[origen] = 0;
-
-            // 2) Bucle principal de Dijkstra: se repite "cantidad" de veces
-            for (int c = 0; c < cantidad; c++)
-            {
-                // Elegimos el nodo NO visitado con menor distancia acumulada
-                // (esto reemplaza a la cola de prioridad de la versión clásica)
-                int u = -1;
+                Vertice u = null;//buscamos el vértice no visitado con la menor distancia
                 float menor = float.MaxValue;
-                for (int i = 0; i < cantidad; i++)
+                Vertice recorrido = l_vertices.primero;
+                while (recorrido != null)
                 {
-                    if (!visitado[i] && distancia[i] < menor)
+                    if (!recorrido.visitado && recorrido.distancia < menor)
                     {
-                        menor = distancia[i];
-                        u = i;
+                        menor = recorrido.distancia;
+                        u = recorrido;
                     }
+                    recorrido = recorrido.sig;
                 }
 
-                if (u == -1) break; // ya no quedan nodos alcanzables
-                visitado[u] = true;
+                if (u == null) break; // ya no quedan nodos alcanzables
+                u.visitado = true;
 
-                // 3) Relajamos las aristas que salen de u
-                Arista a = nodos[u].ls.primero;
+                //3.Evaluar los caminos posibles
+                Arista a = u.ls.primero;
                 while (a != null)
                 {
-                    int v = BuscarIndice(a.destino, nodos);
-                    float nuevaDistancia = distancia[u] + a.peso;
-                    if (nuevaDistancia < distancia[v])
+                    float nuevaDistancia = u.distancia + a.peso;//calculamos la distancia desde el inicio hasta el destino a través de u
+                    if (nuevaDistancia < a.destino.distancia)//atajo
                     {
-                        distancia[v] = nuevaDistancia;
-                        anterior[v] = u;
+                        a.destino.distancia = nuevaDistancia;
+                        a.destino.anterior = u;//guardamos el vértice anterior para reconstruir la ruta más tarde
                     }
                     a = a.sig;
                 }
             }
-
-            // 4) La meta siempre es el último vértice creado ("La Cumbre")
-            int destino = cantidad - 1;
-            total = distancia[destino];
-
-            // 5) Reconstruimos la ruta usando nuestra Pila propia
-            //    (anterior[] nos da el camino al revés: de la meta al inicio)
-            Pila pila = new Pila();
-            int actual = destino;
-            while (actual != -1)
+            //4.Identificar la Meta
+            Vertice destino = l_vertices.primero;
+            while (destino.sig != null)
             {
-                pila.Apilar(nodos[actual].dato.nombre);
-                actual = anterior[actual];
+                destino = destino.sig;
+            }
+            total = destino.distancia;
+
+            // 5) Reconstruimos la ruta 
+            Pila pila = new Pila();
+            Vertice actual = destino;
+            while (actual != null)
+            {
+                pila.Apilar(actual.dato.nombre);//metemos el camino al revés de meta a inicio
+                actual = actual.anterior;
             }
 
             ruta = "";
             while (!pila.EstaVacia())
             {
-                ruta += " -> " + pila.Desapilar();
+                ruta += " -> " + pila.Desapilar();//salen los datos ordenados de inicio a meta
             }
         }
     }
